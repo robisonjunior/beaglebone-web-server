@@ -84,9 +84,9 @@ Diretório Web: /var/www/html
 2. Acesso Externo Seguro (Cloudflare Tunnel)
 A aplicação está mapeada com suporte a HTTPS automático provido pela rede da Cloudflare:
 
-Dashboard Público: https://seu-dominio.com.br/index.php
+Dashboard Público: https://www.beagle.corechip.com.br/index.php
 
-Endpoint ESP32 Público: https://seu-dominio.com.br/inserir_esp32.php
+Endpoint ESP32 Público: https://www.beagle.corechip.com.br/inserir_esp32.php
 
 Nota de Infraestrutura: O daemon do Cloudflare (cloudflared) roda como serviço no Debian 12, estabelecendo conexões de saída criptografadas com os datacenters da Cloudflare. Não há exposição direta de endereços IP públicos locais.
 
@@ -105,7 +105,7 @@ O diretório raiz da aplicação está localizado em
 Endpoint de Ingestão
 URL (Local): http://192.168.10.173/inserir_esp32.php
 
-URL (Cloudflare): https://seu-dominio.com.br/inserir_esp32.php
+URL (Cloudflare): https://www.beagle.corechip.com.br/inserir_esp32.php
 
 Método HTTP: POST
 
