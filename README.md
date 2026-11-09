@@ -151,6 +151,48 @@ Backup (Read): Leitura da partição BOOT e geração do arquivo .img pelo Win32
 
 Restauração (Write): Gravação direta da imagem .img em um novo cartão MicroSD em minutos.
 
+## 🤖 Integração de Inteligência Artificial Embarcada (Google Gemini API)
+
+O servidor conta com um **Agente Inteligente de Diagnóstico e Telemetria** integrado nativamente em PHP via requisições HTTP REST (cURL) para a API do Google AI Studio. 
+
+A arquitetura permite que a BeagleBone Black não apenas receba e armazene leituras, mas analise o comportamento da rede de sensores e do próprio servidor em tempo real.
+
+### **Arquitetura do Agente PHP + Gemini**
+- **Camada de Credenciais Seguras (`config.php`):** Armazena a API Key e as definições do modelo fora do controle de versão Git (`.gitignore`).
+- **Mecanismo de Resiliência e Fallback (`gemini_api.php`):** Tratamento automático de erros `503 Service Unavailable` e `404 Not Found`. Caso o modelo primário enfrente picos de demanda ou indisponibilidade, o sistema redireciona automaticamente a requisição para um modelo secundário de reserva (fallback).
+- **Injeção Dinâmica de Contexto (`api_gemini.php`):** Antes de enviar a consulta para a IA, o script PHP consulta os últimos 20 registros da tabela `leituras_esp32` no MariaDB e injeta os dados reais de temperatura, umidade e carimbos de data/hora no *System Prompt*.
+- **Interface Visual Interativa (`index.php`):** Módulo de chat integrado ao dashboard web em tema escuro (`gemini_agent --embedded_ai`) utilizando Fetch API assíncrona.
+
+---
+
+## 💻 Modelos de IA Configurados
+
+- **Modelo Primário:** `gemini-2.0-flash`
+- **Modelo de Reserva (Fallback):** `gemini-3.5-flash-lite`
+- **Ferramenta de Diagnóstico de API (`listar_modelos.php`):** Script utilitário em PHP para verificar dinamicamente quais modelos da Google AI Studio possuem suporte ativo à função `generateContent` na chave cadastrada.
+
+---
+
+## 📊 Capacidades de Análise do Agente
+
+Através da injeção de contexto do banco de dados local, o agente embarcado é capaz de:
+1. **Análise Estatística sob Demanda:** Cálculo de médias de temperatura e umidade, identificação de máximas/mínimas e detecção de variações bruscas.
+2. **Diagnóstico de Anomalias:** Avaliação de estabilidade dos nós ESP32 e verificação do status dos serviços da BeagleBone.
+3. **Geração de Relatórios Técnicos (`gerar_relatorio.php`):** Automação em PHP para consolidação do histórico de telemetria em formato Markdown (`.md`), com agendamento diário via `cron` no Debian 12.
+
+---
+
+## 📁 Estrutura de Arquivos da Integração Gemini
+
+```text
+/var/www/html/
+├── config.php          # Credenciais e definição dos modelos primário/fallback (ignorado pelo Git)
+├── gemini_api.php      # Motor cURL de comunicação com a API do Gemini com fallback automático
+├── api_gemini.php      # Endpoint JSON que coleta dados do MariaDB e constrói o prompt com contexto
+├── listar_modelos.php  # Utilitário CLI/Web para checagem dos modelos disponíveis na chave API
+├── teste_gemini.php   # Script CLI para teste de conectividade no terminal da BeagleBone
+└── gerar_relatorio.php # Script de automação para geração e arquivamento de relatórios diários
+
 👨‍💻 Autor e Desenvolvimento
 Desenvolvido por Robison Lopes Junior.
 
