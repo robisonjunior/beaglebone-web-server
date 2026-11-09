@@ -154,6 +154,13 @@ if (isset($_GET['api'])) {
     .esp32-input { padding: 8px; background: #1e293b; border: 1px solid #334155; color: #f8fafc; border-radius: 6px; font-family: sans-serif; }
     .esp32-btn { padding: 8px 16px; background: #10b981; color: #022c22; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
     .esp32-btn:hover { background: #059669; color: #fff; }
+
+    /* Estilos do Agente Gemini */
+    .gemini-output { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 6px; min-height: 80px; max-height: 250px; overflow-y: auto; margin-bottom: 12px; color: #e2e8f0; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; }
+    .gemini-form { display: flex; gap: 10px; }
+    .gemini-input { flex: 1; padding: 10px; background: #1e293b; border: 1px solid #334155; color: #f8fafc; border-radius: 6px; font-family: sans-serif; }
+    .gemini-btn { padding: 10px 20px; background: #38bdf8; color: #0f172a; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .gemini-btn:hover { background: #0284c7; color: #fff; }
 </style>
 </head>
 <body>
@@ -184,6 +191,19 @@ if (isset($_GET['api'])) {
             <h3>Temperatura</h3>
             <div class="value" id="temp-val">-- °C</div>
         </div>
+    </div>
+
+    <!-- Módulo Agente Inteligente Gemini -->
+    <div class="section-card">
+        <div class="section-header">
+            <div class="section-title" style="color: #38bdf8;">gemini_agent --embedded_ai</div>
+            <div style="color: #64748b; font-size: 0.8rem;">Google AI Studio API</div>
+        </div>
+        <div class="gemini-output" id="geminiOutput">Aguardando instrução ou consulta de diagnóstico...</div>
+        <form id="formGemini" class="gemini-form">
+            <input type="text" id="geminiPrompt" placeholder="Pergunte ao Gemini sobre os nós ESP32 ou status da placa..." required class="gemini-input">
+            <button type="submit" id="geminiBtn" class="gemini-btn">Consultar IA</button>
+        </form>
     </div>
 
     <!-- Painel de Controlo / Ações Rápidas -->
@@ -492,6 +512,39 @@ if (isset($_GET['api'])) {
                 updateMetrics();
             }
         });
+    });
+
+    // 5. Interação com o Agente Gemini
+    document.getElementById('formGemini').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const input = document.getElementById('geminiPrompt');
+        const output = document.getElementById('geminiOutput');
+        const btn = document.getElementById('geminiBtn');
+        const prompt = input.value.trim();
+
+        if (!prompt) return;
+
+        output.innerText = "Pensando e analisando dados no servidor...";
+        btn.disabled = true;
+
+        try {
+            const res = await fetch('api_gemini.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: prompt })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                output.innerText = data.response;
+            } else {
+                output.innerText = "Erro do Agente: " + (data.message || "Não foi possível obter resposta.");
+            }
+        } catch (err) {
+            output.innerText = "Erro ao comunicar com a API do Gemini.";
+        } finally {
+            btn.disabled = false;
+            input.value = '';
+        }
     });
 
     async function executarAcao(acaoNome) {
