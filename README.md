@@ -1,5 +1,8 @@
 # BeagleBone Black - Web Server & ESP32 Data Collector
 
+![Arquitetura do Projeto BeagleBone](./image_dbabb58a.jpg)
+
+
 Este repositório contém o servidor web (Apache + PHP) hospedado na BeagleBone Black (Debian 12) responsável por receber, processar e exibir dados enviados por nós sensores ESP32.
 
 ## 🛠️ Tecnologias Utilizadas
