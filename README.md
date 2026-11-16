@@ -2,6 +2,10 @@
 
 ![Arquitetura do Projeto BeagleBone](./image_dbabb58a.jpg)
 
+### Download da Imagem de Backup
+
+* [Clique aqui para baixar o backup da BeagleBone (`beaglebone_backup.zip`)](https://junior-eletronica.s3.us-east-1.amazonaws.com/beaglebone/beaglebone_backup.zip)
+
 
 Este repositório contém o servidor web (Apache + PHP) hospedado na BeagleBone Black (Debian 12) responsável por receber, processar e exibir dados enviados por nós sensores ESP32.
 
