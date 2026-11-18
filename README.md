@@ -203,6 +203,11 @@ Através da injeção de contexto do banco de dados local, o agente embarcado é
 👨‍💻 Autor e Desenvolvimento
 Desenvolvido por Robison Lopes Junior.
 
+robisonjunior@gmail.com
+
+RJC Defesa e Aeroespacial Ltda
+
+
 Especialista em engenharia de sistemas embarcados, desenvolvimento de hardware microcontrolado, arquitetura IoT e redes de sensores.
 
 ---
